@@ -8,58 +8,73 @@
 </head>
 <body>
     <h1>Stock Earnings Surprise Calculator</h1>
-    <form method="POST">
+    <form id="calculatorForm">
         <label for="unit">Revenue in Millions:</label>
-        <input type="checkbox" id="unit" name="unit" {% if unit == 'millions' %}checked{% endif %}>
+        <input type="checkbox" id="unit" name="unit">
 
         <label for="prev_eps">Previous EPS:</label>
-        <input type="number" step="0.01" id="prev_eps" name="prev_eps" value="{{ prev_eps }}" required>
+        <input type="number" step="0.01" id="prev_eps" name="prev_eps" required>
         
         <label for="estimated_eps">Estimated EPS:</label>
-        <input type="number" step="0.01" id="estimated_eps" name="estimated_eps" value="{{ estimated_eps }}" required>
+        <input type="number" step="0.01" id="estimated_eps" name="estimated_eps" required>
         
         <label for="actual_eps">Actual EPS:</label>
-        <input type="number" step="0.01" id="actual_eps" name="actual_eps" value="{{ actual_eps }}" required>
+        <input type="number" step="0.01" id="actual_eps" name="actual_eps" required>
 
         <label for="prev_revenue">Previous Revenue:</label>
-        <input type="number" step="0.01" id="prev_revenue" name="prev_revenue" value="{{ prev_revenue }}" required>
+        <input type="number" step="0.01" id="prev_revenue" name="prev_revenue" required>
         
         <label for="estimated_revenue">Estimated Revenue:</label>
-        <input type="number" step="0.01" id="estimated_revenue" name="estimated_revenue" value="{{ estimated_revenue }}" required>
+        <input type="number" step="0.01" id="estimated_revenue" name="estimated_revenue" required>
         
         <label for="actual_revenue">Actual Revenue:</label>
-        <input type="number" step="0.01" id="actual_revenue" name="actual_revenue" value="{{ actual_revenue }}" required>
+        <input type="number" step="0.01" id="actual_revenue" name="actual_revenue" required>
         
         <input type="submit" value="Calculate">
     </form>
 
-    {% if error %}
-    <p style="color:red;">{{ error }}</p>
-    {% endif %}
+    <p id="error" style="color:red;"></p>
 
-    {% if eps_surprise is not none %}
-    <h2>Results</h2>
-    <button id="copyButton">Copy</button>
+    <h2 id="resultsTitle" style="display:none;">Results</h2>
+    <button id="copyButton" style="display:none;">Copy</button>
     <p id="copyMessage" style="display:none; color: green;">Results copied to clipboard</p>
-    <div id="results">
-        <p>
-            EPS: {{ actual_eps_display }}<br>
-            Est: {{ estimated_eps_display }}<br>
-            Surp: {{ eps_surprise }}<br>
-            YoY: {{ eps_yoy }}<br><br>
-            
-            Rev: {{ actual_revenue }} {{ unit_display }}<br>
-            Est: {{ estimated_revenue }} {{ unit_display }}<br>
-            Surp: {{ revenue_surprise }}<br>
-            YoY: {{ revenue_yoy }}<br>
-        </p>
+    <div id="results" style="display:none;">
+        <p id="resultsContent"></p>
     </div>
-    {% endif %}
 
     <script>
+        document.getElementById('calculatorForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Fetch values from form
+            let prev_eps = parseFloat(document.getElementById('prev_eps').value);
+            let estimated_eps = parseFloat(document.getElementById('estimated_eps').value);
+            let actual_eps = parseFloat(document.getElementById('actual_eps').value);
+            let prev_revenue = parseFloat(document.getElementById('prev_revenue').value);
+            let estimated_revenue = parseFloat(document.getElementById('estimated_revenue').value);
+            let actual_revenue = parseFloat(document.getElementById('actual_revenue').value);
+
+            // Perform calculations (add your calculation logic here)
+            let eps_surprise = actual_eps - estimated_eps; // Example calculation
+            let revenue_surprise = actual_revenue - estimated_revenue; // Example calculation
+
+            // Display results
+            document.getElementById('resultsTitle').style.display = 'block';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('resultsContent').innerHTML = `
+                EPS: ${actual_eps.toFixed(2)}<br>
+                Est: ${estimated_eps.toFixed(2)}<br>
+                Surp: ${eps_surprise.toFixed(2)}<br><br>
+                Rev: ${actual_revenue.toFixed(2)}<br>
+                Est: ${estimated_revenue.toFixed(2)}<br>
+                Surp: ${revenue_surprise.toFixed(2)}
+            `;
+            document.getElementById('copyButton').style.display = 'block';
+        });
+
         document.getElementById('copyButton').addEventListener('click', function() {
-            var results = document.getElementById('results').innerText;
-            var textarea = document.createElement('textarea');
+            let results = document.getElementById('resultsContent').innerText;
+            let textarea = document.createElement('textarea');
             textarea.value = results;
             document.body.appendChild(textarea);
             textarea.select();
