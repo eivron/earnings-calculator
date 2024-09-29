@@ -43,6 +43,11 @@
     </div>
 
     <script>
+        function formatNumber(value) {
+            // Check if the value is an integer or has decimals
+            return Number.isInteger(value) ? value.toString() : value.toFixed(2);
+        }
+
         document.getElementById('calculatorForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
 
@@ -62,10 +67,10 @@
             let revenue_yoy = ((actual_revenue - prev_revenue) / prev_revenue) * 100;
 
             // Format results
-            let actual_eps_display = `${(actual_eps).toFixed(2)}c`;
-            let estimated_eps_display = `${(estimated_eps).toFixed(2)}c`;
-            let revenue_display = `${actual_revenue.toFixed(2)} ${unit}`;
-            let estimated_revenue_display = `${estimated_revenue.toFixed(2)} ${unit}`;
+            let actual_eps_display = `${formatNumber(actual_eps)}c`;
+            let estimated_eps_display = `${formatNumber(estimated_eps)}c`;
+            let revenue_display = `${formatNumber(actual_revenue)} ${unit}`;
+            let estimated_revenue_display = `${formatNumber(estimated_revenue)} ${unit}`;
 
             // Display results
             document.getElementById('resultsTitle').style.display = 'block';
@@ -73,12 +78,12 @@
             document.getElementById('resultsContent').innerHTML = `
                 EPS: ${actual_eps_display}<br>
                 Est: ${estimated_eps_display}<br>
-                Surp: ${eps_surprise.toFixed(1)}%<br>
-                YoY: ${eps_yoy.toFixed(1)}%<br><br>
+                Surp: ${Math.round(eps_surprise)}%<br>
+                YoY: ${Math.round(eps_yoy)}%<br><br>
                 Rev: ${revenue_display}<br>
                 Est: ${estimated_revenue_display}<br>
-                Surp: ${revenue_surprise.toFixed(1)}%<br>
-                YoY: ${revenue_yoy.toFixed(1)}%
+                Surp: ${Math.round(revenue_surprise)}%<br>
+                YoY: ${Math.round(revenue_yoy)}%
             `;
             document.getElementById('copyButton').style.display = 'block';
         });
