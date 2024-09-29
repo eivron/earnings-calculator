@@ -47,6 +47,7 @@
             event.preventDefault(); // Prevent form submission
 
             // Fetch values from form
+            let unit = document.getElementById('unit').checked ? 'M' : 'K';
             let prev_eps = parseFloat(document.getElementById('prev_eps').value);
             let estimated_eps = parseFloat(document.getElementById('estimated_eps').value);
             let actual_eps = parseFloat(document.getElementById('actual_eps').value);
@@ -54,20 +55,30 @@
             let estimated_revenue = parseFloat(document.getElementById('estimated_revenue').value);
             let actual_revenue = parseFloat(document.getElementById('actual_revenue').value);
 
-            // Perform calculations (add your calculation logic here)
-            let eps_surprise = actual_eps - estimated_eps; // Example calculation
-            let revenue_surprise = actual_revenue - estimated_revenue; // Example calculation
+            // Perform calculations
+            let eps_surprise = ((actual_eps - estimated_eps) / estimated_eps) * 100;
+            let eps_yoy = ((actual_eps - prev_eps) / prev_eps) * 100;
+            let revenue_surprise = ((actual_revenue - estimated_revenue) / estimated_revenue) * 100;
+            let revenue_yoy = ((actual_revenue - prev_revenue) / prev_revenue) * 100;
+
+            // Format results
+            let actual_eps_display = `${(actual_eps).toFixed(2)}c`;
+            let estimated_eps_display = `${(estimated_eps).toFixed(2)}c`;
+            let revenue_display = `${actual_revenue.toFixed(2)} ${unit}`;
+            let estimated_revenue_display = `${estimated_revenue.toFixed(2)} ${unit}`;
 
             // Display results
             document.getElementById('resultsTitle').style.display = 'block';
             document.getElementById('results').style.display = 'block';
             document.getElementById('resultsContent').innerHTML = `
-                EPS: ${actual_eps.toFixed(2)}<br>
-                Est: ${estimated_eps.toFixed(2)}<br>
-                Surp: ${eps_surprise.toFixed(2)}<br><br>
-                Rev: ${actual_revenue.toFixed(2)}<br>
-                Est: ${estimated_revenue.toFixed(2)}<br>
-                Surp: ${revenue_surprise.toFixed(2)}
+                EPS: ${actual_eps_display}<br>
+                Est: ${estimated_eps_display}<br>
+                Surp: ${eps_surprise.toFixed(1)}%<br>
+                YoY: ${eps_yoy.toFixed(1)}%<br><br>
+                Rev: ${revenue_display}<br>
+                Est: ${estimated_revenue_display}<br>
+                Surp: ${revenue_surprise.toFixed(1)}%<br>
+                YoY: ${revenue_yoy.toFixed(1)}%
             `;
             document.getElementById('copyButton').style.display = 'block';
         });
