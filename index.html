@@ -33,7 +33,7 @@
         <input type="submit" value="Calculate">
     </form>
 
-    <p id="error" style="color:red;"></p>
+    <p id="error" style="color:red; display:none;"></p>
 
     <h2 id="resultsTitle" style="display:none;">Results</h2>
     <button id="copyButton" style="display:none;">Copy</button>
@@ -48,6 +48,11 @@
             return Number.isInteger(value) ? value.toString() : value.toFixed(2);
         }
 
+        function formatPercentage(value) {
+            // Add + or - sign based on the value
+            return (value >= 0 ? "+" : "") + Math.round(value) + "%";
+        }
+
         document.getElementById('calculatorForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
 
@@ -59,6 +64,15 @@
             let prev_revenue = parseFloat(document.getElementById('prev_revenue').value);
             let estimated_revenue = parseFloat(document.getElementById('estimated_revenue').value);
             let actual_revenue = parseFloat(document.getElementById('actual_revenue').value);
+
+            // Error checking
+            if (isNaN(prev_eps) || isNaN(estimated_eps) || isNaN(actual_eps) || isNaN(prev_revenue) || isNaN(estimated_revenue) || isNaN(actual_revenue)) {
+                document.getElementById('error').innerText = "Please fill out all fields correctly.";
+                document.getElementById('error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('error').style.display = 'none';
+            }
 
             // Perform calculations
             let eps_surprise = ((actual_eps - estimated_eps) / estimated_eps) * 100;
@@ -78,12 +92,12 @@
             document.getElementById('resultsContent').innerHTML = `
                 EPS: ${actual_eps_display}<br>
                 Est: ${estimated_eps_display}<br>
-                Surp: ${Math.round(eps_surprise)}%<br>
-                YoY: ${Math.round(eps_yoy)}%<br><br>
+                Surp: ${formatPercentage(eps_surprise)}<br>
+                YoY: ${formatPercentage(eps_yoy)}<br><br>
                 Rev: ${revenue_display}<br>
                 Est: ${estimated_revenue_display}<br>
-                Surp: ${Math.round(revenue_surprise)}%<br>
-                YoY: ${Math.round(revenue_yoy)}%
+                Surp: ${formatPercentage(revenue_surprise)}<br>
+                YoY: ${formatPercentage(revenue_yoy)}
             `;
             document.getElementById('copyButton').style.display = 'block';
         });
