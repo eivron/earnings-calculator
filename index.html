@@ -47,15 +47,25 @@
             // Check if the value is an integer or has decimals
             return Number.isInteger(value) ? value.toString() : value.toFixed(2);
         }
-
+    
         function formatPercentage(value) {
             // Add + or - sign based on the value
             return (value >= 0 ? "+" : "") + Math.round(value) + "%";
         }
-
+    
+        // Function to replace commas with dots in the input fields
+        function replaceCommaWithDot(event) {
+            event.target.value = event.target.value.replace(/,/g, '.');
+        }
+    
+        // Add event listeners to input fields to handle numeric input
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', replaceCommaWithDot);
+        });
+    
         document.getElementById('calculatorForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
-
+    
             // Fetch values from form
             let unit = document.getElementById('unit').checked ? 'M' : 'K';
             let prev_eps = parseFloat(document.getElementById('prev_eps').value);
@@ -64,28 +74,30 @@
             let prev_revenue = parseFloat(document.getElementById('prev_revenue').value);
             let estimated_revenue = parseFloat(document.getElementById('estimated_revenue').value);
             let actual_revenue = parseFloat(document.getElementById('actual_revenue').value);
-
-            // Error checking
-            if (isNaN(prev_eps) || isNaN(estimated_eps) || isNaN(actual_eps) || isNaN(prev_revenue) || isNaN(estimated_revenue) || isNaN(actual_revenue)) {
-                document.getElementById('error').innerText = "Please fill out all fields correctly.";
-                document.getElementById('error').style.display = 'block';
+    
+            // Clear any previous error
+            let errorElement = document.getElementById('error');
+            errorElement.style.display = 'none';
+    
+            // Perform calculations and validation
+            if (isNaN(prev_eps) || isNaN(estimated_eps) || isNaN(actual_eps) || 
+                isNaN(prev_revenue) || isNaN(estimated_revenue) || isNaN(actual_revenue)) {
+                errorElement.textContent = 'Please enter valid numbers in all fields.';
+                errorElement.style.display = 'block';
                 return;
-            } else {
-                document.getElementById('error').style.display = 'none';
             }
-
-            // Perform calculations
+    
             let eps_surprise = ((actual_eps - estimated_eps) / estimated_eps) * 100;
             let eps_yoy = ((actual_eps - prev_eps) / prev_eps) * 100;
             let revenue_surprise = ((actual_revenue - estimated_revenue) / estimated_revenue) * 100;
             let revenue_yoy = ((actual_revenue - prev_revenue) / prev_revenue) * 100;
-
+    
             // Format results
             let actual_eps_display = `${formatNumber(actual_eps)}c`;
             let estimated_eps_display = `${formatNumber(estimated_eps)}c`;
             let revenue_display = `${formatNumber(actual_revenue)} ${unit}`;
             let estimated_revenue_display = `${formatNumber(estimated_revenue)} ${unit}`;
-
+    
             // Display results
             document.getElementById('resultsTitle').style.display = 'block';
             document.getElementById('results').style.display = 'block';
@@ -101,7 +113,7 @@
             `;
             document.getElementById('copyButton').style.display = 'block';
         });
-
+    
         document.getElementById('copyButton').addEventListener('click', function() {
             let results = document.getElementById('resultsContent').innerText;
             let textarea = document.createElement('textarea');
@@ -110,13 +122,13 @@
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-
+    
             var copyMessage = document.getElementById('copyMessage');
             copyMessage.style.display = 'block';
             setTimeout(function() {
                 copyMessage.style.display = 'none';
             }, 2000);
         });
-    </script>
+    </script>    
 </body>
 </html>
