@@ -16,7 +16,7 @@
         <input type="text" id="prev_eps" name="prev_eps" required>
         
         <label for="estimated_eps">Estimated EPS:</label>
-        <input type="text" id="estimated_eps" name="estimated_eps" required>
+        <input type="text" id="estimated_eps" name="estimated_eps">
         
         <label for="actual_eps">Actual EPS:</label>
         <input type="text" id="actual_eps" name="actual_eps" required>
@@ -25,7 +25,7 @@
         <input type="text" id="prev_revenue" name="prev_revenue" required>
         
         <label for="estimated_revenue">Estimated Revenue:</label>
-        <input type="text" id="estimated_revenue" name="estimated_revenue" required>
+        <input type="text" id="estimated_revenue" name="estimated_revenue">
         
         <label for="actual_revenue">Actual Revenue:</label>
         <input type="text" id="actual_revenue" name="actual_revenue" required>
@@ -75,10 +75,10 @@
             // Fetch values from form
             let unit = document.getElementById('unit').checked ? 'M' : 'K';
             let prev_eps = parseFloat(document.getElementById('prev_eps').value);
-            let estimated_eps = parseFloat(document.getElementById('estimated_eps').value);
+            let estimated_eps = document.getElementById('estimated_eps').value !== "" ? parseFloat(document.getElementById('estimated_eps').value) : null;
             let actual_eps = parseFloat(document.getElementById('actual_eps').value);
             let prev_revenue = parseFloat(document.getElementById('prev_revenue').value);
-            let estimated_revenue = parseFloat(document.getElementById('estimated_revenue').value);
+            let estimated_revenue = document.getElementById('estimated_revenue').value !== "" ? parseFloat(document.getElementById('estimated_revenue').value) : null;
             let actual_revenue = parseFloat(document.getElementById('actual_revenue').value);
 
             // Clear any previous error
@@ -86,34 +86,39 @@
             errorElement.style.display = 'none';
 
             // Perform calculations and validation
-            if (isNaN(prev_eps) || isNaN(estimated_eps) || isNaN(actual_eps) || 
-                isNaN(prev_revenue) || isNaN(estimated_revenue) || isNaN(actual_revenue)) {
-                errorElement.textContent = 'Please enter valid numbers in all fields.';
+            if (isNaN(prev_eps) || isNaN(actual_eps) || isNaN(prev_revenue) || isNaN(actual_revenue)) {
+                errorElement.textContent = 'Please enter valid numbers in all required fields.';
                 errorElement.style.display = 'block';
                 return;
             }
 
-            // Calculate EPS surprise
-            let eps_surprise = Math.abs(((actual_eps - estimated_eps) / Math.abs(estimated_eps)) * 100);
-            eps_surprise = (actual_eps >= estimated_eps ? "+" : "-") + Math.round(eps_surprise);
+            // Calculate EPS surprise, if estimated_eps is provided
+            let eps_surprise = "n/a";
+            if (estimated_eps !== null) {
+                eps_surprise = Math.abs(((actual_eps - estimated_eps) / Math.abs(estimated_eps)) * 100);
+                eps_surprise = (actual_eps >= estimated_eps ? "+" : "-") + Math.round(eps_surprise) + "%";
+            }
 
             // Calculate EPS YoY change
             let eps_yoy = Math.abs(((actual_eps - prev_eps) / Math.abs(prev_eps)) * 100);
-            eps_yoy = (actual_eps >= prev_eps ? "+" : "-") + Math.round(eps_yoy);
+            eps_yoy = (actual_eps >= prev_eps ? "+" : "-") + Math.round(eps_yoy) + "%";
 
-            // Calculate revenue surprise
-            let revenue_surprise = Math.abs(((actual_revenue - estimated_revenue) / Math.abs(estimated_revenue)) * 100);
-            revenue_surprise = (actual_revenue >= estimated_revenue ? "+" : "-") + Math.round(revenue_surprise);
+            // Calculate revenue surprise, if estimated_revenue is provided
+            let revenue_surprise = "n/a";
+            if (estimated_revenue !== null) {
+                revenue_surprise = Math.abs(((actual_revenue - estimated_revenue) / Math.abs(estimated_revenue)) * 100);
+                revenue_surprise = (actual_revenue >= estimated_revenue ? "+" : "-") + Math.round(revenue_surprise) + "%";
+            }
 
             // Calculate revenue YoY change
             let revenue_yoy = Math.abs(((actual_revenue - prev_revenue) / Math.abs(prev_revenue)) * 100);
-            revenue_yoy = (actual_revenue >= prev_revenue ? "+" : "-") + Math.round(revenue_yoy);
+            revenue_yoy = (actual_revenue >= prev_revenue ? "+" : "-") + Math.round(revenue_yoy) + "%";
 
             // Format results
             let actual_eps_display = `${formatNumber(actual_eps)}c`;
-            let estimated_eps_display = `${formatNumber(estimated_eps)}c`;
+            let estimated_eps_display = estimated_eps !== null ? `${formatNumber(estimated_eps)}c` : "n/a";
             let revenue_display = `${formatNumber(actual_revenue)} ${unit}`;
-            let estimated_revenue_display = `${formatNumber(estimated_revenue)} ${unit}`;
+            let estimated_revenue_display = estimated_revenue !== null ? `${formatNumber(estimated_revenue)} ${unit}` : "n/a";
 
             // Display results
             document.getElementById('resultsTitle').style.display = 'block';
@@ -121,12 +126,12 @@
             document.getElementById('resultsContent').innerHTML = `
                 EPS: ${actual_eps_display}<br>
                 Est: ${estimated_eps_display}<br>
-                Surp: ${eps_surprise}%<br>
-                YoY: ${eps_yoy}%<br><br>
+                Surp: ${eps_surprise}<br>
+                YoY: ${eps_yoy}<br><br>
                 Rev: ${revenue_display}<br>
                 Est: ${estimated_revenue_display}<br>
-                Surp: ${revenue_surprise}%<br>
-                YoY: ${revenue_yoy}%
+                Surp: ${revenue_surprise}<br>
+                YoY: ${revenue_yoy}
             `;
             document.getElementById('copyButton').style.display = 'block';
         });
