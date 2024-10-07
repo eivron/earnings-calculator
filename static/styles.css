@@ -1,34 +1,42 @@
+/* General Body Styles */
 body {
     font-family: 'Courier New', Courier, monospace;
     background-color: #ffffff;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center; /* Center the form horizontally */
-    align-items: center;     /* Center the form vertically */
-    height: 100vh;           /* Make sure the body takes the full height of the viewport */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     color: #000000;
-    flex-direction: column;  /* Ensure elements are stacked vertically */
+    flex-direction: column;
 }
 
-h1 {
+/* Headings */
+h1, h2 {
     color: #000000;
     font-weight: bold;
     text-transform: uppercase;
     margin-bottom: 20px;
 }
 
+h2 {
+    margin-top: 20px;
+}
+
+/* Form Styles */
 form {
     background-color: #eeeeee;
     padding: 20px;
     border: 2px solid #000000;
     box-shadow: 4px 4px 0 #000000;
-    width: 300px;               /* Fixed width for the form */
-    margin: 0 auto;             /* Center the form */
+    width: 300px;
+    margin: 0 auto;
     display: flex;
-    flex-direction: column;     /* Ensure form elements are stacked vertically */
+    flex-direction: column;
 }
 
+/* Labels and Inputs within Form */
 form label {
     display: block;
     margin-bottom: 8px;
@@ -36,26 +44,31 @@ form label {
     text-transform: uppercase;
 }
 
-form select, form input[type="number"], form input[type="checkbox"] {
-    width: calc(100% - 16px);   /* Full width with padding adjustment */
+form input[type="text"],
+form input[type="number"] {
+    width: calc(100% - 16px);
     padding: 8px;
     margin-bottom: 10px;
     border: 2px solid #000000;
-    border-radius: 0;
+    border-radius: 4px;
     background-color: #ffffff;
     color: #000000;
+    box-sizing: border-box;
 }
 
+/* Checkbox Specific Styling */
 form input[type="checkbox"] {
-    width: auto; /* Let checkbox take its natural width */
+    width: auto;
+    margin-right: 5px;
     margin-bottom: 10px;
 }
 
+/* Submit Button */
 form input[type="submit"] {
-    width: calc(100% - 16px);   /* Full width with padding adjustment */
+    width: calc(100% - 16px);
     padding: 10px;
     border: 2px solid #000000;
-    background-color: #ffcc00;
+    background-color: #ffd700;
     color: #000000;
     font-size: 16px;
     cursor: pointer;
@@ -67,84 +80,41 @@ form input[type="submit"] {
 }
 
 form input[type="submit"]:hover {
-    background-color: #ffaa00;
+    background-color: #ffc107;
 }
 
-h2 {
-    color: #000000;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin-top: 20px;
-}
-
+/* Results and Paragraph Styles */
 p {
     background-color: #eeeeee;
     padding: 20px;
     border: 2px solid #000000;
     box-shadow: 4px 4px 0 #000000;
     width: 300px;
-    margin: 20px auto;          /* Center the paragraph */
+    margin: 20px auto;
+    text-align: center;
 }
 
+/* Results Container */
 #results {
-    text-align: center;         /* Center the results text */
+    text-align: center;
 }
 
+/* Button Styling */
 button {
-    width: calc(55% - 32px);   /* Slightly less wide than the form and results box */
+    width: calc(55% - 32px);
     padding: 10px;
     border: 2px solid #000000;
-    background-color: #ffcc00;
+    background-color: #ffd700;
     color: #000000;
     font-size: 16px;
     cursor: pointer;
     text-transform: uppercase;
     font-weight: bold;
-    margin: 10px auto;          /* Center the button */
+    margin: 10px auto;
     box-shadow: 2px 2px 0 #000000;
     transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #ffaa00;
-}
-
-/* Style all input fields uniformly */
-input[type="text"],
-input[type="number"],
-input[type="checkbox"] {
-    padding: 8px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-/* Specific styling for the checkbox to align it properly */
-input[type="checkbox"] {
-    width: auto;
-    height: auto;
-    margin-right: 5px;
-}
-
-/* Apply consistent width to the input fields */
-input[type="text"] {
-    width: 100%;
-}
-
-/* Optional: Style the submit button */
-input[type="submit"] {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #ffd700;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-input[type="submit"]:hover {
     background-color: #ffc107;
 }
