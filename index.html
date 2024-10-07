@@ -55,7 +55,14 @@
 
         // Function to replace commas with dots in the input fields
         function replaceCommaWithDot(event) {
-            event.target.value = event.target.value.replace(/,/g, '.');
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+
+            // Replace all commas with dots
+            input.value = input.value.replace(/,/g, '.');
+
+            // Restore cursor position
+            input.setSelectionRange(cursorPosition, cursorPosition);
         }
 
         // Add event listeners to input fields to handle numeric input
