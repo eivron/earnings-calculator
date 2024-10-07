@@ -13,22 +13,22 @@
         <input type="checkbox" id="unit" name="unit">
 
         <label for="prev_eps">Previous EPS:</label>
-        <input type="number" step="0.01" id="prev_eps" name="prev_eps" required>
+        <input type="text" id="prev_eps" name="prev_eps" required>
         
         <label for="estimated_eps">Estimated EPS:</label>
-        <input type="number" step="0.01" id="estimated_eps" name="estimated_eps" required>
+        <input type="text" id="estimated_eps" name="estimated_eps" required>
         
         <label for="actual_eps">Actual EPS:</label>
-        <input type="number" step="0.01" id="actual_eps" name="actual_eps" required>
+        <input type="text" id="actual_eps" name="actual_eps" required>
 
         <label for="prev_revenue">Previous Revenue:</label>
-        <input type="number" step="0.01" id="prev_revenue" name="prev_revenue" required>
+        <input type="text" id="prev_revenue" name="prev_revenue" required>
         
         <label for="estimated_revenue">Estimated Revenue:</label>
-        <input type="number" step="0.01" id="estimated_revenue" name="estimated_revenue" required>
+        <input type="text" id="estimated_revenue" name="estimated_revenue" required>
         
         <label for="actual_revenue">Actual Revenue:</label>
-        <input type="number" step="0.01" id="actual_revenue" name="actual_revenue" required>
+        <input type="text" id="actual_revenue" name="actual_revenue" required>
         
         <input type="submit" value="Calculate">
     </form>
@@ -53,21 +53,20 @@
             return (value >= 0 ? "+" : "") + Math.round(value) + "%";
         }
 
-        // Function to replace commas with dots in the input fields
-        function replaceCommaWithDot(event) {
+        // Function to validate input and replace commas with dots
+        function validateAndReplace(event) {
             const input = event.target;
-            const cursorPosition = input.selectionStart;
-
-            // Replace all commas with dots
             input.value = input.value.replace(/,/g, '.');
 
-            // Restore cursor position
-            input.setSelectionRange(cursorPosition, cursorPosition);
+            // Allow only numbers, dots, and minus signs
+            if (!/^[-]?\d*\.?\d*$/.test(input.value)) {
+                input.value = input.value.slice(0, -1);
+            }
         }
 
         // Add event listeners to input fields to handle numeric input
-        document.querySelectorAll('input[type="number"]').forEach(input => {
-            input.addEventListener('input', replaceCommaWithDot);
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('input', validateAndReplace);
         });
 
         document.getElementById('calculatorForm').addEventListener('submit', function(event) {
