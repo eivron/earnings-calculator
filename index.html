@@ -53,6 +53,16 @@
             return (value >= 0 ? "+" : "") + Math.round(value) + "%";
         }
 
+        // Function to replace commas with dots in the input fields
+        function replaceCommaWithDot(event) {
+            event.target.value = event.target.value.replace(/,/g, '.');
+        }
+
+        // Add event listeners to input fields to handle numeric input
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', replaceCommaWithDot);
+        });
+
         document.getElementById('calculatorForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
 
